@@ -298,7 +298,7 @@ R2 = rodrigues(uv(w),norm(w)); % exp map
 fprintf('R:\n'); disp(R);
 fprintf('R2:\n'); disp(R2);
 
-%% Interpolate rotation matrics using Rodrigues' formula
+%% Interpolate rotation matrices using Rodrigues' formula
 ccc
 
 % Get two random rotational matrices
@@ -309,21 +309,33 @@ R2 = rpy2r(360*rand(3,1)*D2R);
 R_link = R1'*R2; % rotation matrix which links R1 and R2
 w_link = r2w(R_link); % equivalent velocity vector fron the rotation matrix
 
-x_traj = []; y_traj = []; z_traj = [];
+% Interpolat using Euler angles
+rpy1 = r2rpy(R1);
+rpy2 = r2rpy(R2);
+
+x_traj_so3 = []; y_traj_so3 = []; z_traj_so3 = [];
+x_traj_rpy = []; y_traj_rpy = []; z_traj_rpy = [];
 all = 1.0; % axis line length
 axis_info = [-1,+1,-1,+4,-1,+1];
 ts = linspace(0,1,100); % t:[0,1]
 for tick = 1:length(ts)
     
-    % Interpolate R1 and R2
+    % Interpolate R1 and R2 on so(3)
     t = ts(tick);
     p_t = (1-t)*p1 + t*p2;
-    R_t = R1*rodrigues(w_link/norm(w_link),norm(w_link)*t); % interpolate
+    R_t_so3 = R1*rodrigues(w_link/norm(w_link),norm(w_link)*t); % interpolate
+    
+    % Interpolate R1 and R2 using Euler angles
+    rpy_t = (1-t)*rpy1 + t*rpy2;
+    R_t_rpy = rpy2r(rpy_t);
     
     % Append the trajectory
-    x_traj = cat(1,x_traj, rv(p_t)+all*rv(R_t(:,1)));
-    y_traj = cat(1,y_traj, rv(p_t)+all*rv(R_t(:,2)));
-    z_traj = cat(1,z_traj, rv(p_t)+all*rv(R_t(:,3)));
+    x_traj_so3 = cat(1,x_traj_so3, rv(p_t)+all*rv(R_t_so3(:,1)));
+    y_traj_so3 = cat(1,y_traj_so3, rv(p_t)+all*rv(R_t_so3(:,2)));
+    z_traj_so3 = cat(1,z_traj_so3, rv(p_t)+all*rv(R_t_so3(:,3)));
+    x_traj_rpy = cat(1,x_traj_rpy, rv(p_t)+all*rv(R_t_rpy(:,1)));
+    y_traj_rpy = cat(1,y_traj_rpy, rv(p_t)+all*rv(R_t_rpy(:,2)));
+    z_traj_rpy = cat(1,z_traj_rpy, rv(p_t)+all*rv(R_t_rpy(:,3)));
     
     % Animate
     if (tick==1) || (mod(tick,2)==0) || (tick==length(ts))
@@ -338,13 +350,19 @@ for tick = 1:length(ts)
         plot_T(pr2t(p2,R2),'fig_idx',1,'subfig_idx',2,...
             'PLOT_AXIS',1,'all',all,'alw',3,'alc','','PLOT_SPHERE',0,'text_str','R2',...
             'TEXT_AT_ZTIP',1,'PLOT_AXIS_TIP',1); % R2
-        plot_T(pr2t(p_t,R_t),'fig_idx',1,'subfig_idx',3,...
-            'PLOT_AXIS',1,'all',all,'alw',2,'alc','','PLOT_SPHERE',0,'PLOT_AXIS_TIP',1); % R_t
-        plot_traj(x_traj,'fig_idx',1,'subfig_idx',2,'tlc','r','tlw',1,'tls','--');
-        plot_traj(y_traj,'fig_idx',1,'subfig_idx',3,'tlc','g','tlw',1,'tls','--');
-        plot_traj(z_traj,'fig_idx',1,'subfig_idx',4,'tlc','b','tlw',1,'tls','--');
-        title_str = sprintf('[%d/%d] t:[%.3f]',tick,length(ts),t);
-        plot_title(title_str,'tfs',25,'interpreter','latex');
+        plot_T(pr2t(p_t,R_t_so3),'fig_idx',1,'subfig_idx',3,...
+            'PLOT_AXIS',1,'all',all,'alw',2,'alc','','als','-','PLOT_SPHERE',0,'PLOT_AXIS_TIP',1);
+        plot_T(pr2t(p_t,R_t_rpy),'fig_idx',1,'subfig_idx',4,...
+            'PLOT_AXIS',1,'all',all,'alw',2,'alc','','als','--','PLOT_SPHERE',0,'PLOT_AXIS_TIP',1);
+        plot_traj(x_traj_so3,'fig_idx',1,'subfig_idx',2,'tlc','r','tlw',1,'tls','-');
+        plot_traj(y_traj_so3,'fig_idx',1,'subfig_idx',3,'tlc','g','tlw',1,'tls','-');
+        plot_traj(z_traj_so3,'fig_idx',1,'subfig_idx',4,'tlc','b','tlw',1,'tls','-');
+        plot_traj(x_traj_rpy,'fig_idx',1,'subfig_idx',5,'tlc','r','tlw',1,'tls','--');
+        plot_traj(y_traj_rpy,'fig_idx',1,'subfig_idx',6,'tlc','g','tlw',1,'tls','--');
+        plot_traj(z_traj_rpy,'fig_idx',1,'subfig_idx',7,'tlc','b','tlw',1,'tls','--');
+        title_str = sprintf('[%d/%d] Interpolation in SO(3) (solid) and Euler Angle (dotted)',...
+            tick,length(ts));
+        plot_title(title_str,'tfs',20,'interpreter','latex');
         drawnow; if ~ishandle(fig), break; end
     end
 end
@@ -436,6 +454,49 @@ while true
         pause;
     end
 end
+
+%% Plot multiple robots at once
+ccc
+robot_names = {'atlas','baxter','coman','darwin','iiwa7','mini','nao','open_manipulator',...
+    'panda','sawyer','thormang','ur10'};
+n_robot = length(robot_names);
+chain_robots = cell(1,n_robot); chain_sizes = zeros(1,n_robot); chain_widths = zeros(1,n_robot);
+for r_idx = 1:n_robot
+    robot_name = robot_names{r_idx};
+    urdf_path = sprintf('../urdf/%s/%s_urdf.xml',...
+        robot_name,robot_name);
+    cache_folder = '../cache';
+    chain_robot = get_chain_from_urdf_with_caching(robot_name,...
+        'RE',0,'urdf_path',urdf_path,'cache_folder',cache_folder);
+    chain_robots{r_idx} = chain_robot;
+    sz = get_chain_sz(chain_robot);
+    chain_sizes(r_idx) = max(sz.xyz_len);
+    chain_widths(r_idx) = sz.xyz_len(2);
+end
+[~,sorted_idx] = sort(chain_sizes); % sort with heights
+y_offset = 0;
+for r_idx = 1:n_robot
+    sort_idx = sorted_idx(r_idx);
+    chain_robot = chain_robots{sort_idx};
+    chain_height = chain_sizes(sort_idx); 
+    chain_width = chain_widths(sort_idx);
+    subfig_idx = r_idx;
+    if r_idx == 1
+    else
+        y_offset = y_offset + ...
+            0.5*(chain_widths(sorted_idx(r_idx-1)) + chain_widths(sorted_idx(r_idx)));
+    end
+    idx_top = get_topmost_idx(chain_robot);
+    chain_robot = move_chain(chain_robot,chain_robot.joint(idx_top).p + cv([0.0,y_offset,0.0]));
+    view_info = [70,20];
+    axis_info = [-inf,inf,-inf,inf,-inf,2];
+    axes_info = [0.02,0,0.95,0.9];
+    ral = max(chain_height,chain_width)/50;
+    plot_chain(chain_robot,'fig_idx',1,'subfig_idx',subfig_idx,'fig_pos',[0.0,0.5,0.8,0.45],...
+        'view_info',view_info,'axis_info',axis_info,'AXIS_OFF',1,'mfa',0.1,...
+        'PLOT_LINK',1,'PLOT_BOX_ADDED',1,'PLOT_ROTATE_AXIS',1,'ral',ral,'NO_MARGIN',1);
+end
+plot_title_with_text('Humanoid Robots','fig_idx',1,'tfs',20,'interpreter','latex');
 
 %% Construct the kinematic chain
 %

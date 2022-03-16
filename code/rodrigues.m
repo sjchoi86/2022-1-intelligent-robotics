@@ -4,11 +4,11 @@ function R = rodrigues(a,q)
 %  The reverse (R -> w) can be achieve by the w = r2w(R) function where w = a*q
 %
 
-if abs(norm(a)) < 1e-6 
+if abs(norm(a)) < 1e-3
     R = eye(3,3);
     return;
 end
-if abs(norm(a)-1) > 1e-6
+if abs(norm(a)-1) > 1e-3
     warning('[rodrigues] a is not a unit vector (%.4e).\n',norm(a));
 end
 
