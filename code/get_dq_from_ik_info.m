@@ -1,0 +1,46 @@
+function [dq,J_use,ik_err,det_J] = get_dq_from_ik_info(chain,ik_info,varargin)
+%
+% Get dq for IK from 'ik_info'
+%
+% Parse options
+ps = inputParser;
+addParameter(ps,'DISREGARD_UNINFLUENTIAL_JOINT',0);
+parse(ps,varargin{:});
+DISREGARD_UNINFLUENTIAL_JOINT = ps.Results.DISREGARD_UNINFLUENTIAL_JOINT;
+
+% Compute dq
+J_use = []; ik_err = [];
+for i_idx = 1:ik_info.n_trgt
+    switch ik_info.trgt_types{i_idx}
+        case 'IK_P'
+            IK_P = 1; IK_R = 0;
+        case 'IK_R'
+            IK_P = 0; IK_R = 1;
+        case 'IK_PR'
+            IK_P = 1; IK_R = 1;
+        otherwise
+            IK_P = 0; IK_R = 0;
+            fprintf(2,'[get_dq_from_ik_info] Unknown IK target type:[%s].\n',...
+                ik_info.trgt_types{i_idx});
+    end
+    [J_use_i,ik_err_i] = get_ik_ingredients(chain,...
+        'joint_names_to_ctrl',ik_info.joint_names_to_ctrl,...
+        'joint_idxs_to_ctrl',ik_info.joint_idxs_to_ctrl,...
+        'joint_name_trgt',ik_info.trgt_joint_names{i_idx},...
+        'T_trgt_goal',ik_info.trgt_coords{i_idx},...
+        'IK_P',IK_P,'IK_R',IK_R,...
+        'p_err_weight',ik_info.trgt_weights{i_idx},...
+        'w_err_weight',ik_info.trgt_weights{i_idx},...
+        'ik_err_th',ik_info.ik_err_th,...
+        'DISREGARD_UNINFLUENTIAL_JOINT',DISREGARD_UNINFLUENTIAL_JOINT);
+    J_use = cat(1,J_use,J_use_i); % concatenate Jacobian matrix
+    ik_err = cat(1,ik_err,ik_err_i); % concatenate error
+end
+
+% Damped least square
+[dq,det_J] = damped_ls(J_use,ik_err,...
+    'lambda_rate',ik_info.lambda_rate,...
+    'lambda_min',ik_info.lambda_min,...
+    'lambda_max',ik_info.lambda_max,...
+    'step_size',ik_info.step_size,'dq_th',ik_info.dq_th);
+dq = trim_scale(ik_info.step_size*dq,ik_info.dq_th);
