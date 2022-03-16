@@ -1,0 +1,316 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    
+    <!--joint between base and link_0-->
+    <joint name="base_iiwa7_joint" type="fixed">
+        <parent link="base"/>
+        <child link="iiwa7_link_0"/>
+        <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </joint>
+    
+    <link name="iiwa7_link_0">
+        <inertial>
+            <origin xyz="-0.1 0 0.07" rpy="0 0 0"/>
+            <mass value="5"/>
+            <inertia ixx="0.05"  ixy="0"  ixz="0" iyy="0.06" iyz="0" izz="0.03" />
+        </inertial>
+        
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://iiwa_description/meshes/iiwa7/visual/link_0.stl"/>
+            </geometry>
+            <material name="Grey"/>
+        </visual>
+        
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://iiwa_description/meshes/iiwa7/collision/link_0.stl"/>
+            </geometry>
+            <material name="Grey"/>
+        </collision>
+        
+        <self_collision_checking>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <capsule radius="0.15" length="0.25"/>
+            </geometry>
+        </self_collision_checking>
+    </link>
+    
+    <!-- joint between link_0 and link_1 -->
+    <joint name="iiwa7_joint_1" type="revolute">
+        <parent link="iiwa7_link_0"/>
+        <child link="iiwa7_link_1"/>
+        <origin xyz="0 0 0.15" rpy="0 0 0"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="-2.9671" upper="2.9671"
+               effort="300" velocity="10" />
+        <safety_controller soft_lower_limit="-2.9322"
+                           soft_upper_limit="2.9322"
+                           k_position="100"
+                           k_velocity="2"/>
+        <dynamics damping="0.5"/>
+    </joint>
+    
+    <link name="iiwa7_link_1">
+        <inertial>
+            <origin xyz="0 -0.03 0.12" rpy="0 0 0"/>
+            <mass value="3.4525"/>
+            <inertia ixx="0.02183"  ixy="0"  ixz="0" iyy="0.007703" iyz="-0.003887" izz="0.02083" />
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0.0075" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://iiwa_description/meshes/iiwa7/visual/link_1.stl"/>
+            </geometry>
+            <material name="Orange"/>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0.0075" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://iiwa_description/meshes/iiwa7/collision/link_1.stl"/>
+            </geometry>
+            <material name="Orange"/>
+        </collision>
+    </link>
+    
+    <joint name="iiwa7_joint_2" type="revolute">
+        <parent link="iiwa7_link_1"/>
+        <child link="iiwa7_link_2"/>
+        <origin xyz="0 0 0.19" rpy="1.5708   0 3.1416"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="-2.0944" upper="2.0944"
+               effort="300" velocity="10" />
+        <safety_controller soft_lower_limit="-2.0595"
+                           soft_upper_limit="2.0595"
+                           k_position="100"
+                           k_velocity="2"/>
+        <dynamics damping="0.5"/>
+    </joint>
+    
+    <link name="iiwa7_link_2">
+        <inertial>
+            <origin xyz="0.0003 0.059 0.042" rpy="0 0 0"/>
+            <mass value="3.4821"/>
+            <inertia ixx="0.02076"  ixy="0"  ixz="-0.003626" iyy="0.02179" iyz="0" izz="0.00779" />
+        </inertial>
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://iiwa_description/meshes/iiwa7/visual/link_2.stl"/>
+            </geometry>
+            <material name="Orange"/>
+        </visual>
+        
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://iiwa_description/meshes/iiwa7/collision/link_2.stl"/>
+            </geometry>
+            <material name="Orange"/>
+        </collision>
+    </link>
+    
+    <joint name="iiwa7_joint_3" type="revolute">
+        <parent link="iiwa7_link_2"/>
+        <child link="iiwa7_link_3"/>
+        <origin xyz="0 0.21 0" rpy="1.5708 0 3.1416"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="-2.9671" upper="2.9671"
+               effort="300" velocity="10" />
+        <safety_controller soft_lower_limit="-2.9322"
+                           soft_upper_limit="2.9322"
+                           k_position="100"
+                           k_velocity="2"/>
+        <dynamics damping="0.5"/>
+    </joint>
+    
+    <link name="iiwa7_link_3">
+        <inertial>
+            <origin xyz="0 0.03 0.13" rpy="0 0 0"/>
+            <mass value="4.05623"/>
+            <inertia ixx="0.03204"  ixy="0"  ixz="0" iyy="0.00972" iyz="0.006227" izz="0.03042" />
+        </inertial>
+        
+        <visual>
+            <origin xyz="0 0 -0.026" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://iiwa_description/meshes/iiwa7/visual/link_3.stl"/>
+            </geometry>
+            <material name="Orange"/>
+        </visual>
+        
+        <collision>
+            <origin xyz="0 0 -0.026" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://iiwa_description/meshes/iiwa7/collision/link_3.stl"/>
+            </geometry>
+            <material name="Orange"/>
+        </collision>
+        
+    </link>
+    
+    <joint name="iiwa7_joint_4" type="revolute">
+        <parent link="iiwa7_link_3"/>
+        <child link="iiwa7_link_4"/>
+        <origin xyz="0 0 0.19" rpy="1.5708 0 0"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="-2.0944" upper="2.0944"
+               effort="300" velocity="10" />
+        <safety_controller soft_lower_limit="-2.0595"
+                           soft_upper_limit="2.0595"
+                           k_position="100"
+                           k_velocity="2"/>
+        <dynamics damping="0.5"/>
+    </joint>
+    
+    <link name="iiwa7_link_4">
+        <inertial>
+            <origin xyz="0 0.067 0.034" rpy="0 0 0"/>
+            <mass value="3.4822"/>
+            <inertia ixx="0.02178"  ixy="0"  ixz="0" iyy="0.02075" iyz="-0.003625" izz="0.007785" />
+        </inertial>
+        
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://iiwa_description/meshes/iiwa7/visual/link_4.stl"/>
+            </geometry>
+            <material name="Orange"/>
+        </visual>
+        
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://iiwa_description/meshes/iiwa7/collision/link_4.stl"/>
+            </geometry>
+            <material name="Orange"/>
+        </collision>
+    </link>
+    
+    <joint name="iiwa7_joint_5" type="revolute">
+        <parent link="iiwa7_link_4"/>
+        <child link="iiwa7_link_5"/>
+        <origin xyz="0 0.21 0" rpy="-1.5708 3.1416 0"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="-2.9671" upper="2.9671"
+               effort="300" velocity="10" />
+        <safety_controller soft_lower_limit="-2.9322"
+                           soft_upper_limit="2.9322"
+                           k_position="100"
+                           k_velocity="2"/>
+        <dynamics damping="0.5"/>
+    </joint>
+    
+    <link name="iiwa7_link_5">
+        <inertial>
+            <origin xyz="0.0001 0.021 0.076" rpy="0 0 0"/>
+            <mass value="2.1633"/>
+            <inertia ixx="0.01287"  ixy="0"  ixz="0" iyy="0.005708" iyz="-0.003946" izz="0.01112" />
+        </inertial>
+        
+        <visual>
+            <origin xyz="0 0 -0.026" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://iiwa_description/meshes/iiwa7/visual/link_5.stl"/>
+            </geometry>
+            <material name="Orange"/>
+        </visual>
+        
+        <collision>
+            <origin xyz="0 0 -0.026" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://iiwa_description/meshes/iiwa7/collision/link_5.stl"/>
+            </geometry>
+            <material name="Orange"/>
+        </collision>
+    </link>
+    
+    <joint name="iiwa7_joint_6" type="revolute">
+        <parent link="iiwa7_link_5"/>
+        <child link="iiwa7_link_6"/>
+        <origin xyz="0 0.06070 0.19" rpy="1.5708 0 0"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="-2.0944" upper="2.0944"
+               effort="300" velocity="10" />
+        <safety_controller soft_lower_limit="-2.0595"
+                           soft_upper_limit="2.0595"
+                           k_position="100"
+                           k_velocity="2"/>
+        <dynamics damping="0.5"/>
+    </joint>
+    
+    <link name="iiwa7_link_6">
+        <inertial>
+            <origin xyz="0 0.0006 0.0004" rpy="0 0 0"/>
+            <mass value="2.3466"/>
+            <inertia ixx="0.006509"  ixy="0"  ixz="0" iyy="0.006259" iyz="0.00031891" izz="0.004527" />
+        </inertial>
+        
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://iiwa_description/meshes/iiwa7/visual/link_6.stl"/>
+            </geometry>
+            <material name="Orange"/>
+        </visual>
+        
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://iiwa_description/meshes/iiwa7/collision/link_6.stl"/>
+            </geometry>
+            <material name="Orange"/>
+        </collision>
+    </link>
+    
+    <joint name="iiwa7_joint_7" type="revolute">
+        <parent link="iiwa7_link_6"/>
+        <child link="iiwa7_link_7"/>
+        <origin xyz="0 0.081 0.06070" rpy="-1.5708 3.1416 0"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="-3.0543" upper="3.0543"
+               effort="300" velocity="10" />
+        <safety_controller soft_lower_limit="3.0194"
+                           soft_upper_limit="3.0194"
+                           k_position="100"
+                           k_velocity="2"/>
+        <dynamics damping="0.5"/>
+    </joint>
+    
+    <link name="iiwa7_link_7">
+        <inertial>
+            <origin xyz="0 0 0.02" rpy="0 0 0"/>
+            <mass value="3.129"/>
+            <inertia ixx="0.01464"  ixy="0.0005912"  ixz="0" iyy="0.01465" iyz="0" izz="0.002872" />
+        </inertial>
+        
+        <visual>
+            <origin xyz="0 0 -0.0005" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://iiwa_description/meshes/iiwa7/visual/link_7.stl"/>
+            </geometry>
+            <material name="Grey"/>
+        </visual>
+        
+        <collision>
+            <origin xyz="0 0 -0.0005" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://iiwa_description/meshes/iiwa7/collision/link_7.stl"/>
+            </geometry>
+            <material name="Grey"/>
+        </collision>
+    </link>
+    
+    <joint name="iiwa7_joint_ee" type="fixed">
+        <parent link="iiwa7_link_7"/>
+        <child link="iiwa7_link_ee"/>
+        <origin xyz="0 0 0.045" rpy="0 0 0"/>
+    </joint>
+    
+    <link name="iiwa7_link_ee">
+    </link>
+    
+</robot>

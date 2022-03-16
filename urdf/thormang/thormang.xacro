@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<!-- Revolute-Revolute Manipulator -->
+<robot name="thormang3" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  
+  <!-- some parameters -->
+  <xacro:property name="pi" value="3.141592654" />
+
+  <!-- Import all Gazebo-customization elements, including Gazebo colors -->
+  <xacro:include filename="$(find thormang3_description)/urdf/thormang3.gazebo" />
+  <!-- Import Rviz colors -->
+  <xacro:include filename="$(find thormang3_description)/urdf/materials.xacro" />
+
+  <xacro:include filename="$(find thormang3_description)/urdf/thormang3.structure.arm.xacro" />
+  <xacro:include filename="$(find thormang3_description)/urdf/thormang3.structure.leg.xacro" />
+  <xacro:include filename="$(find thormang3_description)/urdf/thormang3.structure.head.xacro" />
+  
+  <xacro:include filename="$(find thormang3_description)/urdf/thormang3.transmissions.xacro" />
+
+
+  <!-- Used for fixing robot -->
+<!--
+  <link name="world">
+  </link>
+  <joint name="world_fixed" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <parent link="world"/>
+    <child link="base"/>
+  </joint>
+  <link name="base">
+  </link>
+  <joint name="base_fixed" type="fixed">
+    <origin xyz="0 0 0.723" rpy="0 0 0"/>
+    <parent link="base"/>
+    <child link="pelvis_link"/>
+  </joint>
+-->
+  <!-- pelvis_link -->
+  <link name="pelvis_link">
+    <collision>
+      <origin xyz="-0.01 0 0.07" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.2 0.25 0.17" />
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://thormang3_description/meshes/robotis_pelvis_link.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="grey"/>
+    </visual>
+
+    <inertial>
+      <origin xyz="-0.011 0.000 0.058" rpy="0 0 0"/>
+      <mass value="6.869"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+      <!--<inertia ixx="0.03603" ixy="0.0" ixz="0.00016" iyy="0.02210" iyz="0.0" izz="0.03830" />--> 
+    </inertial>
+  </link>
+
+  <!-- torso yaw joint -->
+  <joint name="torso_y" type="revolute">
+    <parent link="pelvis_link"/>
+    <child link="chest_link"/>
+    <origin xyz="0 0 0.1705" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit velocity="6.5" effort="1000" lower="${-pi*0.6}" upper="${pi*0.6}" />
+    <dynamics damping="0.1" friction="0.0" />
+  </joint>
+  <xacro:insert_transmission name="torso_y" />
+  
+  <!-- chest_link -->
+  <link name="chest_link">
+    <collision>
+      <origin xyz="-0.01 0 0.11" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.2 0.25 0.23" />
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://thormang3_description/meshes/robotis_chest_link.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="grey"/>
+    </visual>
+
+    <inertial>
+      <origin xyz="-0.007 0.000 0.109" rpy="0 0 0"/>
+      <mass value="5.383"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+      <!--<inertia ixx="0.04710" ixy="0.0" ixz="0.04710" iyy="0.02554" iyz="0.0" izz="0.03094" />-->
+    </inertial>
+  </link>
+
+  <!-- imu joint -->
+  <joint name="imu_fixed" type="fixed">
+    <parent link="pelvis_link"/>
+    <child link="imu_link"/>
+    <origin xyz="0.03 0 0.0" rpy="0 0 ${pi}"/>
+  </joint>
+
+  <link name="imu_link">
+  </link>
+  
+  <xacro:thormang3_l_arm parent="chest_link" />
+  <xacro:thormang3_r_arm parent="chest_link" />
+
+  <xacro:thormang3_l_leg parent="pelvis_link" />
+  <xacro:thormang3_r_leg parent="pelvis_link" />
+
+  <xacro:thormang3_head parent="chest_link" />
+
+</robot>
