@@ -451,7 +451,7 @@ while true
     end
     
     if tick == 1
-        pause;
+        fprintf(2,'Paused. Press any key to continue.\n'); pause; 
     end
 end
 
@@ -608,7 +608,7 @@ plot_chain_graph(chain,'fig_idx',2,'fig_pos',[0.5,0.15,0.3,0.3],...
     'interpreter','latex','text_fs',15,'title_fs',20);
 
 % Update chain mass, inertia, and com
-chain = update_chain_mass_inertia_com(chain,'density',500);
+% chain = update_chain_mass_inertia_com(chain,'density',500);
 
 tick = 0; ee_traj = [];
 while tick < 1e4 % loop
@@ -771,7 +771,7 @@ while true
     end
     
     % Plot the kinematic chain
-    if mod(tick,1) == 0
+    if mod(tick,5) == 0
         fig = plot_chain(chain,'fig_idx',1,'subfig_idx',1,'fig_pos',[0.5,0.4,0.5,0.6],...
             'view_info',[68,16],'axis_info',[-2.5,+2.5,-2.5,+2.5,0,+4.5],'USE_ZOOMRATE',1,...
             'PLOT_LINK',1,'llc','k','llw',2,'lls','-',...
@@ -841,7 +841,7 @@ ccc
 CONSIDER_JOINT_LIMIT = 1; % consider joint limit while solving IK
 
 % Initialize robot
-robot_name = 'coman'; % 'coman', 'iiwa7'
+robot_name = 'iiwa7'; % 'coman', 'iiwa7'
 chain = get_chain_from_urdf_with_caching(robot_name,'RE',0,'SKIP_CAPSULE',0);
 chain = add_joi_to_robot(chain);
 chain.joi = get_joi_chain(chain);

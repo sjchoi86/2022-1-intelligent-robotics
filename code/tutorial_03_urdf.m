@@ -1,7 +1,6 @@
 ccc
 %% How to parse a URDF file
 ccc
-
 % Parse raw xml file
 robot_name = 'iiwa7';
 urdf_path = sprintf('../urdf/%s/%s_urdf.xml',robot_name,robot_name);
@@ -91,6 +90,7 @@ for i_idx = 1:n_joint % for all joints
         );
     % Add parent joint index
     chain.joint(i_idx).parent = parent_joint_idx;
+    fprintf('[%d/%d] joint name:[%s] type:[%s] added. \n',i_idx,n_joint,joint_name,joint_type);
 end % for i_idx = 1:n_joint % for all joints
 
 % Add the current joint as childs of the parent joint
@@ -106,14 +106,15 @@ end
 
 %% Plot current chain
 ca;
-plot_chain(chain,'PLOT_JOINT_AXIS',1);
-plot_chain_graph(chain)
+plot_chain(chain,'fig_pos',[0.0,0.3,0.4,0.65],...
+    'PLOT_JOINT_SPHERE',1,'PLOT_JOINT_AXIS',1,'PLOT_JOINT_NAME',1);
+plot_chain_graph(chain,'fig_pos',[0.0,0.0,0.4,0.3]);
 
 %% Forward kinematics then plot
 ca;
 chain = fk_chain(chain,'');
-plot_chain(chain,'PLOT_JOINT_AXIS',1);
-plot_chain_graph(chain)
+plot_chain(chain,'fig_pos',[0.0,0.3,0.4,0.65],...
+    'PLOT_JOINT_SPHERE',1,'PLOT_JOINT_AXIS',1,'PLOT_JOINT_NAME',1);
 
 %% Parse link information
 ca
@@ -124,8 +125,9 @@ for i_idx = 1:chain.n_link % for all links
     link_i = robot.link{i_idx};
     link_name = link_i.Attributes.name;
     chain.link_names{i_idx} = link_name; % append link names
+    fprintf('[%d/%d] link_name:[%s]\n',i_idx,chain.n_link,link_name);
 end % for i_idx = 1:chain.n_link % for all links
-
+fprintf('\n');
 for i_idx = 1:chain.n_link % for all links
     link_i = robot.link{i_idx};
     link_name = link_i.Attributes.name;
@@ -205,11 +207,16 @@ for i_idx = 1:chain.n_link % for all links
     chain.link(i_idx).scale     = scale;
     chain.link(i_idx).fv        = fv; % append mesh
     chain.link(i_idx).box       = box;
+    
+    % Print
+    fprintf('[%d/%d] link:[%s] added to joint:[%s]. mesh_path:[%s]\n',...
+        i_idx,chain.n_link,link_name,chain.joint_names{joint_idx},mesh_path);
 end % for i_idx = 1:chain.n_link % for all links
 
-%% Plot chain
+%% Plot chain with links added
 ca;
-plot_chain(chain,'PLOT_JOINT_AXIS',1,'mfc','');
+plot_chain(chain,'fig_pos',[0.0,0.3,0.4,0.65],...
+    'PLOT_JOINT_SPHERE',1,'PLOT_JOINT_AXIS',1,'PLOT_JOINT_NAME',1);
 
 %% Optimize capsules
 ca
@@ -223,14 +230,18 @@ for i_idx = 1:chain.n_link % for each link
         cap_opt_i = '';
     end
     chain.link(i_idx).capsule = cap_opt_i;
+    fprintf('[%d/%d] capsule optimized\n',i_idx,chain.n_link);
 end % for i_idx = 1:chain.n_link % for each link
 fprintf('Done.\n');
 
 %% Plot chain with capsules
 ca;
-plot_chain(chain,'PLOT_CAPSULE',1,'cfc','','cfa',0.5);
+plot_chain(chain,'fig_pos',[0.0,0.3,0.4,0.65],...
+    'PLOT_JOINT_SPHERE',1,'PLOT_JOINT_AXIS',1,'PLOT_JOINT_NAME',1,...
+    'PLOT_CAPSULE',1,'cfc','','cfa',0.5);
 
 %% Update other information and plot
+ca;
 % Update mass, inertia, and com of links
 chain = update_chain_mass_inertia_com(chain,'density',400);
 

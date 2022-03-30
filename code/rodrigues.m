@@ -20,4 +20,3 @@ q = q * norm_a;
 % Get R
 a_hat = skew(a);
 R = eye(3,3) + a_hat*sin(q) + a_hat*a_hat*(1-cos(q));
-
