@@ -8,10 +8,10 @@ In this Lecture, we will be learning about various topics in Robotics, that I th
 - Week 3 (3/17): Kinematics (Lie Algebra, Rodriques' formula, Construction Kinematic Chains)
 - Week 4 (3/24): Kinematics (FK and IK)
 - Week 5 (3/31): Kinematics (Null-space IK, Augmented Jacobian, URDF)
-- Week 6:(4/7): Motion Retargeting
+- Week 6:(4/7): Good-Old-Fashioned Path Planning
 - Week 7:(4/14): Interlim Presentation 1 (paper review)
 - Week 8:(4/21): Interlim Presentation 2 (paper review)
-- Week 9:(4/28): Good-Old-Fashioned Navigation
+- Week 9:(4/28): Motion Retargeting
 - Week 10 (5/5): Estimation Theory in a Nutshell (Kalman Filter)
 - Week 11 (5/12): Sensor-based SLAM
 - Week 12 (5/19): Vision-based SLAM
