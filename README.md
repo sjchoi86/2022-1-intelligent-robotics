@@ -15,8 +15,8 @@ In this Lecture, we will be learning about various topics in Robotics, that I th
 - Week 10 (5/5): Estimation Theory in a Nutshell (Kalman Filter)
 - Week 11 (5/12): Sensor-based SLAM
 - Week 12 (5/19): Vision-based SLAM
-- Week 13 (5/26): Visual Navigation
-- Week 14 (6/2): Invited Talk
+- Week 13 (5/26): Invited Talk ([Seongyong Koo](https://be.linkedin.com/in/seongyong-koo-452755120?original_referer=https%3A%2F%2Fwww.google.com%2F))
+- Week 14 (6/2): Visual Navigation
 - Week 15 (6/9): Final Presentation
 - Week 16 (6/16): Final Presentation
 
