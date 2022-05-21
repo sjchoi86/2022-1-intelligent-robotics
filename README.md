@@ -17,7 +17,7 @@ In this Lecture, we will be learning about various topics in Robotics, that I th
 - Week 12 (5/19): Vision-based SLAM
 - Week 13 (5/26): Invited Talk ([Seongyong Koo](https://be.linkedin.com/in/seongyong-koo-452755120?original_referer=https%3A%2F%2Fwww.google.com%2F)@[pickit3d](https://www.pickit3d.com/))
 - Week 14 (6/2): Invited Talk ([Nuri Kim](https://www.linkedin.com/in/nuri-kim/)@SNU [RILAB](http://rllab.snu.ac.kr/))
-- Week 15 (6/9): Final Presentation
-- Week 16 (6/16): Final Presentation
+- Week 15 (6/9): Final Presentation 1
+- Week 16 (6/16): Final Presentation 2
 
 ##### This syllabus is subject to further change or revision, as needed, to best realize the educational goals of the course.
